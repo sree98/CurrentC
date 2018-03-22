@@ -10,85 +10,12 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <style>
-/*.navbar {
-	overflow: hidden;
-	background-color: #333;
-	font-family: Arial, Helvetica, sans-serif;
-}
-
-.navbar a {
-	float: left;
-	font-size: 16px;
-	color: white;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-}
-
-.dropdown {
-	float: left;
-	overflow: hidden;
-}
-
-.dropdown .dropbtn {
-	font-size: 16px;    
-	border: none;
-	outline: none;
-	color: white;
-	padding: 14px 16px;
-	background-color: inherit;
-	font-family: inherit;
-	margin: 0;
-}
-
-.navbar a:hover, .dropdown:hover .dropbtn {
-	background-color: red;
-}
-
-.dropdown-content {
-	display: none;
-	position: absolute;
-	background-color: #f9f9f9;
-	min-width: 160px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	z-index: 1;
-}
-
-.dropdown-content a {
-	float: none;
-	color: black;
-	padding: 12px 16px;
-	text-decoration: none;
-	display: block;
-	text-align: left;
-}
-
-.dropdown-content a:hover {
-	background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-	display: block;
-}*/
-
 body {
 	background-image: url("./cityBackground.jpg");
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-	/*display: -ms-flexbox;
-	display: -webkit-box;
-	display: flex;
-	-ms-flex-align: center;
-	-ms-flex-pack: center;
-	-webkit-box-align: center;
-	align-items: center;
-	-webkit-box-pack: center;
-	justify-content: center;
-	padding-top: 40px;
-	padding-bottom: 40px;*/
-	/*background-color: #f5f5f5;*/
 }
 
 .form-signin {
@@ -121,7 +48,6 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-
 </style>
 <script>
 $(document).ready(function(){
@@ -283,26 +209,10 @@ function signOut(){
 				</li>
 			</ul>
 			<form class="form-inline my-2 my-lg-0">
-				<button class="btn btn-outline-success my-2 my-sm-0" onclick="signOut()">Sign Out</button>
+				<button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="signOut()">Sign Out</button>
 			</form>
 		</div>
 	</nav>
-<!-- <div class="navbar" style="display: none;" id="navbar">
-	<a href="#home" id="myHomepage" onclick="homepageFunction()">Homepage</a>
-	<a href="./graph.html" id="myGraphs">View Graphs</a>
-	<div class="dropdown">
-	<button class="dropbtn">More Options
-		<i class="fa fa-caret-down"></i>
-	</button>
-	<div class="dropdown-content">	
-		<a href="#" id="faqpage" onclick="faqpageFunction()">FAQ</a>
-		<a href="#" id="currentevents" onclick="currenteventsFunction()"> Current Events/News </a>
-		<a href="#" id="contactus" onclick="contactusFunction()">Contact Us</a>
-	</div>
-	</div>
-	<a href="#signout" id="signOut" onclick="signOut()" >Sign Out</a>
-</div> -->
-
 <div data-role="content" id="divholder" data-position="fixed">
 <html>
 		<head>
