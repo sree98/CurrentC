@@ -6,6 +6,7 @@ var homepage = require('./homepageCurrentC');//Require the use of homepage.js
 var faqpage = require('./faqpage');
 var contactus= require('./contactus');
 var currentevents = require('./currentevents');
+var viewgraph = require('./viewgraph');
 
 //-------------------app.get requests below--------------------------
 
@@ -30,6 +31,11 @@ app.get('/contactus', function(req,res) {
 app.get('/currentevents', function(req,res){
 	var webpage4 = currentevents.render();
 	res.send(webpage4);
+});
+
+app.get('/viewgraph', function(req,res){
+	var webpage5 = viewgraph.render();
+	res.send(webpage5);
 });
 
 app.listen(8080, function(){

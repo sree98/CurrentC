@@ -73,7 +73,6 @@ body {
 
 
 </style>
-
 <script>
 function homepageFunction(){
 	var URL = "http://localhost:8080/homepage";
@@ -139,12 +138,26 @@ function currenteventsFunction(){
 		}
 	});
 }
+function graphFunction(){
+	var URL5 = "http://localhost:8080/viewgraph";
+	$.ajax({
+		type: "GET",
+		url: URL5,
+		dataType: "html",									 			
+		success: function(msg){
+			document.getElementById("divholder").innerHTML = msg;
+		},
+		error: function(jgXHR, textStatus, errorThrown) {
+			alert("Error: " + textStatus + " " + errorThrown); 	
+		}
+	});
+}
 </script>
 </head>
 <body>
 <div class="navbar">
   <a href="#home" id="myHomepage" onclick="homepageFunction()">Homepage</a>
-  <a href="#viewgraphs">View Graphs</a>
+  <a href="#viewgraphs" id="myGraphs" onclick="graphFunction()">View Graphs</a>
   <div class="dropdown">
     <button class="dropbtn">More Options
       <i class="fa fa-caret-down"></i>
@@ -165,12 +178,7 @@ function currenteventsFunction(){
 <style>
 .mySlides {display:none}
 
-body {
-	background-image: url(cityBackground.jpg);
-	}
-	
-	
-	
+body { background-image: url(cityBackground.jpg); }
 </style>
 <body>
 
