@@ -6,6 +6,7 @@ var homepage = require('./homepageCurrentC');			//Require the use of homepage.js
 var faqpage = require('./faqpage');
 var contactus= require('./contactus');
 var currentevents = require('./currentevents');
+var viewgraph = require('./viewgraph');
 
 
 
@@ -42,7 +43,13 @@ app.get('/currentevents', function(req,res)			//app.get for when /homepage is re
 	var webpage4 = currentevents.render();
 	res.send(webpage4);		//Send this result to the answer and thus later into the div
 
-	
+});
+
+app.get('/viewgraph', function(req,res)			//app.get for when /homepage is read it'll run the render function and output the HTML code
+{
+	var webpage5 = viewgraph.render();
+	res.send(webpage5);		//Send this result to the answer and thus later into the div
+
 });
 
 app.listen(8080, function() 				//Listen into port 8080 as direction
