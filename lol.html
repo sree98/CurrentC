@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <head>
+    <script>
+    function getFavorites(){
+	var URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/return"
+	$.ajax({ // Ajax Request
+		url: URL,
+		type: 'GET',
+		success: function(msg) {
+		console.log(msg);},
+		error  : function() { console.log('ERROR');} // display error if failed
+		});
+    }
+    </script>
+    </head>
+    <body>
+    <input type=button onclick="getFavorites()" value="Get Favorites"/>
+    
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<div data-role="content" id="divholder" data-position="fixed">
+    <html>
+        <head>
+            <title>Coinc</title>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+            </script>
+        </head>
+        <script>
+            function signUp() {
+            	var theE = document.getElementById("email").value 
+            	var theP = document.getElementById("pass").value 
+            	var e = { 
+              		"theEmail"  :  theE // Packing into json object for transport
+            	}
+            	var p = {
+            		"thePass" : theP
+            		
+            	}
+            	var URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/signUp/?theEmail=" + theE + "&thePass=" + theP;
+            	$.ajax({ // Ajax Request
+            		url: URL,
+            		type: 'GET',
+            		success: function(msg) {
+            			if(msg == "Logged In"){ // Success
+            			document.getElementById("output").innerHTML="Welcome to Our Site!"
+            			
+            		};
+            			if(msg != "Logged In"){ // Failed
+            				alert("failed son")
+            			};
+            		}, // Setting div return message 
+            		error  : function() { console.log('ERROR');} // display error if failed
+            		});
+            }
+            
+            function signIn() {
+            	var theE = document.getElementById("email").value 
+            	var theP = document.getElementById("pass").value 
+            	var e = { 
+              		"theEmail"  :  theE // Packing into json object for transport
+            	}
+            	var p = {
+            		"thePass" : theP
+            	}
+            	URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/signIn/?theEmail=" + theE + "&thePass=" + theP;
+            	$.ajax({ // Ajax Request
+            		url: URL,
+            		type: 'GET',
+            		success: function(msg) {
+            		 if(msg == "Logged In"){
+            		    var URL6 = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/index.html"
+            		    $.ajax({
+			                type: "GET",														
+                    		url: URL6,
+                    		dataType: "html",									 			
+                    		success: function(msg){
+                    		document.getElementById("divholder").innerHTML = msg;			
+                    		},
+                    		error: function(jgXHR, textStatus, errorThrown) {						
+                                    alert("Error: " + textStatus + " " + errorThrown); 	
+                    		}
+                    	});
+            		};
+            		if(msg != "Logged In"){
+            				alert("dat good good")
+            			};
+            		 }, // Setting div return message 
+            		error  : function() { console.log('ERROR');} // display error if failed
+            		});
+            }
+            </script>
+        <body>
+            <input type=text id="email" placeholder = "Enter your Email"/>
+            </br>
+            <input type=text id="pass" placeholder = "Enter your password"/>
+            </br>
+            <input style="text-align: middle" type=button onclick="signUp()" value="Sign Up"/>
+            </br>
+            <input type=button onclick="signIn()" value="Sign In"/>
+            </br>
+            <div id="output" style="text-align:center;">  <!-- Starting text, each time this will be replaced when populated -->
+            </div>
+            </br>
+        </body>
+    </html>
+</div>

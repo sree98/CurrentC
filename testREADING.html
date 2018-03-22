@@ -1,0 +1,157 @@
+
+<html>
+
+<head>
+<title>Coinc</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+</script>
+
+
+<style> /*This Style will center the table in the middle of the web page*/
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+</style>
+
+<script>
+function signIn() {
+	var theE = document.getElementById("email").value 
+	var theP = document.getElementById("pass").value 
+	var e = { 
+  		"theEmail"  :  theE // Packing into json object for transport
+	}
+	var p = {
+		"thePass" : theP
+	}
+	URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/signIn/?theEmail=" + theE + "&thePass=" + theP;
+	$.ajax({ // Ajax Request
+		url: URL,
+		type: 'GET',
+		success: function(msg) { 
+			if(msg == "Logged In"){
+				console.log(msg);
+			}
+			if(msg != "Logged In"){
+				alert(msg);
+			}
+		}, // Setting div return message 
+		error  : function() { console.log('ERROR');} // display error if failed
+		});
+}
+
+function writing(){
+	var theV = document.getElementById("value").value 
+	var URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/writing/?theVal=" + theV;	
+	$.ajax({ // Ajax Request
+		url: URL,
+		type: 'POST',
+		success: function(msg) { console.log(msg);}, // Setting div return message 
+		error  : function() { console.log('ERROR');} // display error if failed
+		});
+}
+
+function reading(){
+	var URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/oldData/?fav=" + favorites.value;
+	$.ajax({ // Ajax Request
+		url: URL,
+		type: 'GET',
+		success: function(msg) {
+		var table = "<table> <th> Last </th> <th> High </th> <th> Low </th>"
+		for(key in msg){
+			table += "<tr> <td>" + msg[key].lastTrade + "</td> <td>" + msg[key].highTrade + "</td> <td>" + msg[key].lowTrade + "</td> </tr>"
+		}
+		table += "</table>"
+		document.getElementById("colorOutput").innerHTML=table;}, // Setting div return message 
+		error  : function() { console.log('ERROR');} // display error if failed
+		});
+}
+
+function getFavorites(){
+	var URL = "https://70d47b1648ea446f8b72fda78a47a774.vfs.cloud9.us-east-2.amazonaws.com/reading/"
+	$.ajax({ // Ajax Request
+		url: URL,
+		type: 'GET',
+		success: function(msg) {
+		console.log(msg)
+		var str = "<select id='favorites'>"
+		for(var i=0; i<msg.length; i++){
+			str += "<option value=" + msg[i] +">" + msg[i] +"</option>";
+		}
+		str += "</select>";
+		document.getElementById("favorite").innerHTML=str;}, // Setting div return message 
+		error  : function() { console.log('ERROR');} // display error if failed
+		});
+}
+
+/*
+var es;
+
+
+function reading(close){
+	if(close == 1){
+	es = new EventSource("/sse");
+	es.onmessage = function(ev) {
+	document.getElementById("colorOutput").innerHTML=ev.data;
+	};
+	};
+	if(close == 0){
+	es.close()
+	document.getElementById("colorOutput").innerHTML="";
+	};
+}
+
+window.setInterval(function(){
+  reading()
+}, 10000);
+*/
+
+
+
+</script>
+
+</head>
+
+
+
+
+<body>
+<input type=text id="email" placeholder = "Enter your Email"/>
+</br>
+<input type=text id="pass" placeholder = "Enter your password here"/>
+
+<input type=button onclick="signIn()" value="Log In!"/>
+
+<div id="output" style="text-align:center;">  <!-- Starting text, each time this will be replaced when populated -->
+</div>
+</br>
+</br>
+<input type = text id="value" placeholder = "Add a favorite!"/>
+<input type=button onclick="writing()" value="Enter"/>
+</br>
+</br>
+</br>
+<input type=button onclick="getFavorites()" value="Get Favorites"/>
+<div id="favorite" style="text-align:center;"></div>
+</br>
+</br>
+</br>
+<p>Hey</p>
+<input type=button onclick="reading()" value="Get Coin Data"/>
+<div id="colorOutput" style="text-align:center;">
+</div>
+
+
+</body>
+
+</html>

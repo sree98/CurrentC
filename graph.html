@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<head>
+	<title>Pusher Test</title>
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+	<link rel="icon" href="./favicon.ico" type="image/x-icon">
+	<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" integrity="sha256-CfcERD4Ov4+lKbWbYqXD6aFM9M51gN4GUEtDhkWABMo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<style type="text/css">
+		/*.navbar {
+		    overflow: hidden;
+		    background-color: #333;
+		    font-family: Arial, Helvetica, sans-serif;
+		}
+		
+		.navbar a {
+		    float: left;
+		    font-size: 16px;
+		    color: white;
+		    text-align: center;
+		    padding: 14px 16px;
+		    text-decoration: none;
+		}
+		
+		.dropdown {
+		    float: left;
+		    overflow: hidden;
+		}
+		
+		.dropdown .dropbtn {
+		    font-size: 16px;    
+		    border: none;
+		    outline: none;
+		    color: white;
+		    padding: 14px 16px;
+		    background-color: inherit;
+		    font-family: inherit;
+		    margin: 0;
+		}
+		
+		.navbar a:hover, .dropdown:hover .dropbtn {
+		    background-color: red;
+		}
+		
+		.dropdown-content {
+		    display: none;
+		    position: absolute;
+		    background-color: #f9f9f9;
+		    min-width: 160px;
+		    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		    z-index: 1;
+		}
+		
+		.dropdown-content a {
+		    float: none;
+		    color: black;
+		    padding: 12px 16px;
+		    text-decoration: none;
+		    display: block;
+		    text-align: left;
+		}
+		
+		.dropdown-content a:hover {
+		    background-color: #ddd;
+		}
+		
+		.dropdown:hover .dropdown-content {
+		    display: block;
+		}*/
+		.subheader{
+			display: flex;
+			align-items: center;
+			margin: 0px;
+		}
+		#cryptoChart{
+			height: 80% !important;
+			width: 95% !important;
+			margin: 0 auto;
+		}
+	</style>
+	<script type="text/javascript">
+		function clearAutoCall(){
+			for(i=0; i<10000; i++){
+				window.clearInterval(i);
+			}
+			$("#chartCanvas").hide();
+		};
+		$(document).ready(function(){
+			// $("#cryptoChart").height($( document ).height()* .80);
+			exchange=""
+			market=""
+			$.ajax({
+				type: 'GET',
+				url: "./getExchange",
+				success: function(data){
+					$.each(data.data, function(i, arr){
+						$('#exchange').append('<option value="'+arr.exch_code+'">'+arr.exch_name+'</option>');
+					})
+				}
+			})
+			$('#getExch').on('click',function(){
+				$.ajax({
+					type: 'GET',
+					url: "./getExchange",
+					success: function(data){
+						$.each(data.data, function(i, arr){
+							$('#exchange').append('<option value="'+arr.exch_code+'">'+arr.exch_name+'</option>');
+						})
+					}
+				})
+			})
+			$('#exchange').on('change', function() {
+				$.ajax({
+					type: 'GET',
+					url: "./clearData",
+					success: function(){
+						console.log("Data Cleared");
+						cryptoChartRef.destroy();
+					}
+				})
+				clearAutoCall();
+				exchange=this.value;
+				console.log(exchange);
+				$("#market").show("fast");
+				$.ajax({
+					type: 'GET',
+					url: "./getMarket",
+					data: {'exchName': exchange},
+					success: function(data){
+						$('#market').empty();
+						// console.log(data.data);
+						$.each(data.data, function(i, arr){
+							$('#market').append('<option value="'+arr.mkt_name+'">'+arr.mkt_name+'</option>');
+						})
+					}
+				})
+			})
+			$('#market').on('change', function() {
+				$.ajax({
+					type: 'GET',
+					url: "./clearData",
+					success: function(){
+						console.log("Data Cleared");
+					}
+				})
+				clearAutoCall();
+				market=this.value;
+				console.log(market);
+				$("#chartCanvas").show("fast");
+				(function() {
+					// Enable pusher logging - don't include this in production
+					Pusher.logToConsole = false;
+
+					var serverUrl = "/",
+						members = [],
+						pusher = new Pusher('e7099260734c9c20c749', {
+							cluster: 'us2',
+							encrypted: true
+						}),
+						channel, cryptoChartRef;
+
+					function showEle(elementId){
+						document.getElementById(elementId).style.display = 'flex';
+					}
+
+					function hideEle(elementId){
+						document.getElementById(elementId).style.display = 'none';
+					}
+
+					function ajax(url, method, payload, successCallback){
+						var xhr = new XMLHttpRequest();
+						xhr.open(method, url, true);
+						xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+						xhr.onreadystatechange = function () {
+							if (xhr.readyState != 4 || xhr.status != 200);
+							successCallback(xhr.responseText);
+						};
+						xhr.send(JSON.stringify(payload));
+					}
+
+					function renderCryptoChart(cryptoData) {
+						var ctx = document.getElementById("cryptoChart").getContext("2d");
+						var options = {
+							title: {
+								display: 1,
+								text: market+' Chart on '+exchange
+							},
+							responsive: true,
+							maintainAspectRatio: false
+						};
+						cryptoChartRef = new Chart(ctx, {
+							type: "line",
+							data: cryptoData,
+							options: options
+						});
+					}
+
+					var chartConfig = {
+						labels: [],
+						datasets: [{
+							label: ' '+market+' Price',
+							fill: 1,
+							lineTension: 0.1,
+							backgroundColor: "rgba(75,192,192,0.4)",
+							borderColor: "rgba(75,192,192,1)",
+							borderCapStyle: 'butt',
+							borderDash: [],
+							borderDashOffset: 0.0,
+							borderJoinStyle: 'miter',
+							pointBorderColor: "rgba(75,192,192,1)",
+							pointBackgroundColor: "#fff",
+							pointBorderWidth: 1,
+							pointHoverRadius: 5,
+							pointHoverBackgroundColor: "rgba(75,192,192,1)",
+							pointHoverBorderColor: "rgba(220,220,220,1)",
+							pointHoverBorderWidth: 2,
+							pointRadius: 1,
+							pointHitRadius: 10,
+							data: [],
+							spanGaps: false,
+						}]
+					};
+					ajax('./getCryptoPrice?exchName='+exchange+'&mrktName='+market, "GET",{}, onFetchPriceSuccess);
+					setInterval(function() {
+						ajax('./getCryptoPrice?exchName='+exchange+'&mrktName='+market, "GET", {}, () => {});
+					}, 1500);
+
+					function onFetchPriceSuccess(response){
+						hideEle("loader");
+						var respData = JSON.parse(response);
+						chartConfig.labels = respData.dataPoints.map(dataPoint => dataPoint.time);
+						chartConfig.datasets[0].data = respData.dataPoints.map(dataPoint => dataPoint.trade_price);
+						renderCryptoChart(chartConfig)
+					}
+
+					channel = pusher.subscribe('price-chart');
+					channel.bind('new-price', function(data) {
+						var newPriceData = data.dataPoint;
+						if(cryptoChartRef.data.labels.length > 20){
+							cryptoChartRef.data.labels.shift();
+							cryptoChartRef.data.datasets[0].data.shift();
+						}
+						cryptoChartRef.data.labels.push(newPriceData.time);
+						cryptoChartRef.data.datasets[0].data.push(newPriceData.trade_price);
+						cryptoChartRef.update();
+					});
+				})();
+			})
+		});
+		
+		function faqpageFunction(){
+			var URL2 = "./faqpage";
+			$.ajax({
+				type: "GET",
+				url: URL2,
+				dataType: "html",
+				success: function(msg){
+					document.getElementById("divholder").innerHTML = msg;
+				},
+				error: function(jgXHR, textStatus, errorThrown) {
+					//Error handling if any network issues occur
+					alert("Error: " + textStatus + " " + errorThrown); 	
+				}
+			});
+		}
+		
+		function contactusFunction() {
+			var URL3 = "./contactus";
+			$.ajax({
+				type: "GET",															
+				url: URL3,
+				dataType: "html",									 			
+				success: function(msg){
+					document.getElementById("divholder").innerHTML = msg;
+				},
+				error: function(jgXHR, textStatus, errorThrown) {
+					alert("Error: " + textStatus + " " + errorThrown); 	
+				}
+			});
+		}
+		
+		function buttonRequest(){
+			alert("Ticket Sent!");
+		}
+		
+		function currenteventsFunction(){
+			var URL4 = "./currentevents";
+			$.ajax({
+				type: "GET",
+				url: URL4,
+				dataType: "html",									 			
+				success: function(msg){
+					document.getElementById("divholder").innerHTML = msg;
+				},
+				error: function(jgXHR, textStatus, errorThrown) {
+					alert("Error: " + textStatus + " " + errorThrown); 	
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href=".">CurrentC</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="./graph.html">Live Graphs</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						More Options
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#" onclick="faqpageFunction()">FAQ</a>
+						<a class="dropdown-item" href="#" onclick="currenteventsFunction()">Current Events (News)</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#" onclick="contactusFunction()">Contact Us</a>
+					</div>
+				</li>
+			</ul>
+			<form class="form-inline my-2 my-lg-0">
+				<button class="btn btn-outline-success my-2 my-sm-0" onclick="signOut()">Sign Out</button>
+			</form>
+		</div>
+	</nav>
+	<!-- <div class="navbar" id="navbar">
+	  <a href="./index.html" id="myHomepage">Homepage</a>
+	  <a href="./graph.html" id="myGraphs">View Graphs</a>
+	  <div class="dropdown">
+	    <button class="dropbtn">More Options
+	      <i class="fa fa-caret-down"></i>
+	    </button>
+	    <div class="dropdown-content">	
+	      <a href="#" id="faqpage" onclick="faqpageFunction()">FAQ</a>
+	      <a href="#" id="currentevents" onclick="currenteventsFunction()"> Current Events/News </a>
+	      <a href="#" id="contactus" onclick="contactusFunction()">Contact Us</a>
+	    </div>
+	  </div> 
+	</div> -->
+	<div style="margin: 1%;">
+		<button id="getExch">GO</button>
+		<select id="exchange"></select>
+		<select id="market" style="display: none;"></select>
+		<div id="chartCanvas" style="display: none;">
+			<div id="loader" class="loader">Loading</div>
+			<canvas id="cryptoChart"></canvas>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+	<script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+
+</body>
+</html>

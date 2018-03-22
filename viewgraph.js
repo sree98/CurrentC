@@ -1,6 +1,8 @@
 //viewgraph.js
 'use strict'
+var fs = require('fs');
+
 exports.render = function(){
-	var strholder = ''
-	return strholder;
+	var file = fs.readFileSync('./graph.html', 'utf8');
+	return file;
 }
