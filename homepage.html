@@ -1,0 +1,257 @@
+<html>
+<head>
+<!-- Scripts used to run jQuery, Ajax, jQuery Mobile -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+body {
+	background-image: url(woodTexture.jpg);
+	}
+
+
+
+</style>
+
+<script>
+function homepageFunction()										<!-- This function runs the homepage ajax request to render the homepage! -->
+{
+		var URL = "http://localhost:8080/homepage";		<!-- URL to send request to from our server to get the results -->
+		$.ajax({
+			type: "GET",															<!-- GET request -->
+			url: URL,
+			dataType: "html",									 			
+			success: function(msg){
+				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
+			},
+			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
+                        alert("Error: " + textStatus + " " + errorThrown); 	
+			}
+		});
+}
+
+function faqpageFunction()
+{
+		var URL2 = "http://localhost:8080/faqpage";		<!-- URL to send request to from our server to get the results -->
+		$.ajax({
+			type: "GET",															<!-- GET request -->
+			url: URL2,
+			dataType: "html",									 			
+			success: function(msg){
+				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
+			},
+			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
+                        alert("Error: " + textStatus + " " + errorThrown); 	
+			}
+		});
+}
+
+function contactusFunction()
+{
+		var URL3 = "http://localhost:8080/contactus";		<!-- URL to send request to from our server to get the results -->
+		$.ajax({
+			type: "GET",															<!-- GET request -->
+			url: URL3,
+			dataType: "html",									 			
+			success: function(msg){
+				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
+			},
+			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
+                        alert("Error: " + textStatus + " " + errorThrown); 	
+			}
+		});
+}
+
+function buttonRequest()
+{
+alert("Ticket Sent!");
+}
+
+function currenteventsFunction()
+{
+var URL4 = "http://localhost:8080/currentevents";		<!-- URL to send request to from our server to get the results -->
+		$.ajax({
+			type: "GET",															<!-- GET request -->
+			url: URL4,
+			dataType: "html",									 			
+			success: function(msg){
+				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
+			},
+			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
+                        alert("Error: " + textStatus + " " + errorThrown); 	
+			}
+		});
+
+
+
+
+}
+
+
+
+</script>
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="navbar">
+  <a href="#home" id="myHomepage" onclick="homepageFunction()">Homepage</a>
+  <a href="#viewgraphs">View Graphs</a>
+  <div class="dropdown">
+    <button class="dropbtn">More Options
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">	
+      <a href="#" id="faqpage" onclick="faqpageFunction()">FAQ</a>
+      <a href="#" id=currentevents" onclick="currenteventsFunction()">Current Events/News</a>
+      <a href="#" id="contactus" onclick="contactusFunction()">Contact Us</a>
+    </div>
+  </div> 
+</div>
+
+<div data-role="content" id="divholder" data-position="fixed">
+<html>
+<title>CurrentC Homepage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+.mySlides {display:none}
+
+body {
+	background-image: url(cityBackground.jpg);
+	}
+	
+	
+	
+</style>
+<body>
+
+<div class="w3-container">
+  <u><h1><center><font size="8" color="red">Welcome to CurrentC!</u></h1></center></font>
+  <hr>
+	
+</div>
+
+<div class="w3-content" style="max-width:800px">
+  <img class="mySlides" src="cryptoHomepage.jpg" style="width:100%">
+  <img class="mySlides" src="coinigyGraph.jpg" style="width:100%">
+  <img class="mySlides" src="blockchain.jpg" style="width:100%">
+</div>
+
+<div class="w3-center">
+  <div class="w3-section">
+    <button class="w3-button w3-light-grey" onclick="plusDivs(-1)">Previous</button>
+    <button class="w3-button w3-light-grey" onclick="plusDivs(1)">Next</button>
+  </div>
+  <button class="w3-button demo" onclick="currentDiv(1)"><font color="red">1</button></font>
+  <button class="w3-button demo" onclick="currentDiv(2)"><font color="red">2</button></font>
+  <button class="w3-button demo" onclick="currentDiv(3)"><font color="red">3</button> </font>
+</div>
+
+<hr>
+<br>
+<center><b><p><font color="red">Please use the menu buttons on the top of your screen to navigate through the website </p></center></b></font>
+<script>
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function currentDiv(n) {
+  showDivs(slideIndex = n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  if (n > x.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";  
+  }
+  for (i = 0; i < dots.length; i++) {
+     dots[i].className = dots[i].className.replace(" w3-red", "");
+  }
+  x[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " w3-red";
+}
+</script>
+
+</body>
+</html>
+</div>
+
+
+
+</body>
+
+</html>
