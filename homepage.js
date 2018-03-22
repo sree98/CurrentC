@@ -16,9 +16,7 @@ body { background-image: url(cityBackground.jpg); }
 </style>
 <body>
 <div class="w3-container">
-  <u><h1><center><font size="8" color="red">Welcome to CurrentC!</u></h1></center></font>
-  <hr>
-	
+  <u><h1><center><font size="8" color="red">Welcome to CurrentC!</u></h1></center></font>	
 </div>
 
 <div class="w3-content" style="max-width:800px">
@@ -36,9 +34,6 @@ body { background-image: url(cityBackground.jpg); }
   <button class="w3-button demo" onclick="currentDiv(2)"><font color="red">2</button></font>
   <button class="w3-button demo" onclick="currentDiv(3)"><font color="red">3</button> </font>
 </div>
-
-<hr>
-<br>
 <center><b><p><font color="red">Please use the menu buttons on the top of your screen to navigate through the website </p></center></b></font>
 
 </body>

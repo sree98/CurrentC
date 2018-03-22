@@ -1,5 +1,6 @@
 <html>
 <head>
+<title>CurrentC</title>
 <!-- Scripts used to run jQuery, Ajax, jQuery Mobile -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
@@ -7,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <style>
 /*.navbar {
 	overflow: hidden;
@@ -70,16 +72,64 @@
 }*/
 
 body {
-	background-image: url(woodTexture.jpg);
-	}
+	background-image: url("./cityBackground.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	/*display: -ms-flexbox;
+	display: -webkit-box;
+	display: flex;
+	-ms-flex-align: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	padding-top: 40px;
+	padding-bottom: 40px;*/
+	/*background-color: #f5f5f5;*/
+}
+
+.form-signin {
+	width: 100%;
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+	background-color: white;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 
 </style>
 <script>
 $(document).ready(function(){
 	$("#navbar").hide();
 	var x = document.cookie;
-	if(x=="gsScrollPos-1257=; gsScrollPos-25=0; status=userLoggedIn") {
+	if (x.includes('status=userLoggedIn')) {
 		$("#navbar").show("fast");
+		console.log("cookie found");
 		homepageFunction();
 	}
 	console.log(x);
@@ -256,7 +306,6 @@ function signOut(){
 <div data-role="content" id="divholder" data-position="fixed">
 <html>
 		<head>
-			<title>Coinc</title>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
 			</script>
 		</head>
@@ -281,7 +330,7 @@ function signOut(){
 						
 					};
 						if(msg != "Logged In"){ // Failed
-							alert("failed son")
+							alert(msg)
 						};
 					}, // Setting div return message 
 					error  : function() { console.log('ERROR');} // display error if failed
@@ -320,25 +369,41 @@ function signOut(){
 						});
 					};
 					if(msg != "Logged In"){
-							alert("dat good good")
+							alert(msg)
 						};
-					 }, // Setting div return message 
-					error  : function() { console.log('ERROR');} // display error if failed
+					 },
+					error  : function() { console.log('ERROR');}
 					});
 			}
 			</script>
 		<body>
-			<input type=text id="email" placeholder = "Enter your Email"/>
-			</br>
-			<input type=text id="pass" placeholder = "Enter your password"/>
-			</br>
-			<input style="text-align: middle" type=button onclick="signUp()" value="Sign Up"/>
-			</br>
-			<input type=button onclick="signIn()" value="Sign In"/>
-			</br>
-			<div id="output" style="text-align:center;">  <!-- Starting text, each time this will be replaced when populated -->
+			<div class="text-center" style="margin-top: 12.5%;">
+				<form class="form-signin">
+					<img class="mb-4" src="./logosmall.png" alt="" width="72" height="72">
+					<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+					<label for="email" class="sr-only">Email address</label>
+					<input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+					<label for="pass" class="sr-only">Password</label>
+					<input type="password" id="pass" class="form-control" placeholder="Password" required>
+					<br>
+					<div id="output" style="text-align:center;">  <!-- Starting text, each time this will be replaced when populated -->
+					</div>
+					<br>
+					<button class="btn btn-lg btn-primary btn-block" type="button" onclick="signUp()">Sign up</button>
+					<button class="btn btn-lg btn-primary btn-block" type="button" onclick="signIn()">Sign in</button>
+					<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+				</form>
+				<!-- <input type=text id="email" placeholder = "Enter your Email"/>
+				</br>
+				<input type=text id="pass" placeholder = "Enter your password"/>
+				</br>
+				<input style="text-align: middle" type=button onclick="signUp()" value="Sign Up"/>
+				</br>
+				<input type=button onclick="signIn()" value="Sign In"/>
+				</br> -->
+				
+				</br>
 			</div>
-			</br>
 		</body>
 	</html>
 </div>

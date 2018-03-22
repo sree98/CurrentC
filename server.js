@@ -52,7 +52,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 });
 
 
-setInterval(function(){
+/*setInterval(function(){
 request({
   method: 'POST',
   url: 'https://api.coinigy.com/api/v1/ticker',
@@ -153,7 +153,7 @@ request({
     	lowTrade : low
 	});
 });
-}, 60000);
+}, 60000);*/
 
 
 
