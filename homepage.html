@@ -75,91 +75,73 @@ body {
 </style>
 
 <script>
-function homepageFunction()										<!-- This function runs the homepage ajax request to render the homepage! -->
-{
-		var URL = "http://localhost:8080/homepage";		<!-- URL to send request to from our server to get the results -->
-		$.ajax({
-			type: "GET",															<!-- GET request -->
-			url: URL,
-			dataType: "html",									 			
-			success: function(msg){
-				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
-			},
-			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
-                        alert("Error: " + textStatus + " " + errorThrown); 	
-			}
-		});
+function homepageFunction(){
+	var URL = "http://localhost:8080/homepage";
+	$.ajax({
+		type: "GET",
+		url: URL,
+		dataType: "html",									 			
+		success: function(msg){
+			document.getElementById("divholder").innerHTML = msg;
+		},
+		error: function(jgXHR, textStatus, errorThrown) {
+			alert("Error: " + textStatus + " " + errorThrown); 	
+		}
+	});
 }
 
-function faqpageFunction()
-{
-		var URL2 = "http://localhost:8080/faqpage";		<!-- URL to send request to from our server to get the results -->
-		$.ajax({
-			type: "GET",															<!-- GET request -->
-			url: URL2,
-			dataType: "html",									 			
-			success: function(msg){
-				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
-			},
-			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
-                        alert("Error: " + textStatus + " " + errorThrown); 	
-			}
-		});
+function faqpageFunction(){
+	var URL2 = "http://localhost:8080/faqpage";
+	$.ajax({
+		type: "GET",
+		url: URL2,
+		dataType: "html",
+		success: function(msg){
+			document.getElementById("divholder").innerHTML = msg;
+		},
+		error: function(jgXHR, textStatus, errorThrown) {
+			//Error handling if any network issues occur
+			alert("Error: " + textStatus + " " + errorThrown); 	
+		}
+	});
 }
 
-function contactusFunction()
-{
-		var URL3 = "http://localhost:8080/contactus";		<!-- URL to send request to from our server to get the results -->
-		$.ajax({
-			type: "GET",															<!-- GET request -->
-			url: URL3,
-			dataType: "html",									 			
-			success: function(msg){
-				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
-			},
-			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
-                        alert("Error: " + textStatus + " " + errorThrown); 	
-			}
-		});
+function contactusFunction() {
+	var URL3 = "http://localhost:8080/contactus";
+	$.ajax({
+		type: "GET",															<!-- GET request -->
+		url: URL3,
+		dataType: "html",									 			
+		success: function(msg){
+			document.getElementById("divholder").innerHTML = msg;
+		},
+		error: function(jgXHR, textStatus, errorThrown) {
+			alert("Error: " + textStatus + " " + errorThrown); 	
+		}
+	});
 }
 
-function buttonRequest()
-{
-alert("Ticket Sent!");
+function buttonRequest(){
+	alert("Ticket Sent!");
 }
 
-function currenteventsFunction()
-{
-var URL4 = "http://localhost:8080/currentevents";		<!-- URL to send request to from our server to get the results -->
-		$.ajax({
-			type: "GET",															<!-- GET request -->
-			url: URL4,
-			dataType: "html",									 			
-			success: function(msg){
-				document.getElementById("divholder").innerHTML = msg;				<!-- Take information received and set it equal to the myContent -->
-			},
-			error: function(jgXHR, textStatus, errorThrown) {						<!-- Error handling if any network issues occur -->
-                        alert("Error: " + textStatus + " " + errorThrown); 	
-			}
-		});
-
-
-
-
+function currenteventsFunction(){
+	var URL4 = "http://localhost:8080/currentevents";
+	$.ajax({
+		type: "GET",
+		url: URL4,
+		dataType: "html",									 			
+		success: function(msg){
+			document.getElementById("divholder").innerHTML = msg;
+		},
+		error: function(jgXHR, textStatus, errorThrown) {
+			alert("Error: " + textStatus + " " + errorThrown); 	
+		}
+	});
 }
-
-
-
 </script>
-
-
-
-
-
 </head>
-
 <body>
-
 <div class="navbar">
   <a href="#home" id="myHomepage" onclick="homepageFunction()">Homepage</a>
   <a href="#viewgraphs">View Graphs</a>

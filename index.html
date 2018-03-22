@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<head>
+	<title>Pusher Test</title>
+	<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" integrity="sha256-CfcERD4Ov4+lKbWbYqXD6aFM9M51gN4GUEtDhkWABMo=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<style type="text/css">
+		/*header{
+			background: #2b303b;
+			height: 50px;
+			width:100%;
+			display: flex;
+			color:#fff;
+		}
+		.subheader{
+			display: flex;
+			align-items: center;
+			margin: 0px;
+		}*/
+		#cryptoChart{
+			height: 80% !important;
+			width: 95% !important;
+			margin: 0 auto;
+		}
+	</style>
+	<script type="text/javascript">
+		function clearAutoCall(){
+			for(i=0; i<10000; i++){
+				window.clearInterval(i);
+			}
+			$("#chartCanvas").hide();
+		};
+		$(document).ready(function(){
+			// $("#cryptoChart").height($( document ).height()* .80);
+			exchange=""
+			market=""
+			$.ajax({
+				type: 'GET',
+				url: "./getExchange",
+				success: function(data){
+					$.each(data.data, function(i, arr){
+						$('#exchange').append('<option value="'+arr.exch_code+'">'+arr.exch_name+'</option>');
+					})
+				}
+			})
+			$('#exchange').on('change', function() {
+				$.ajax({
+					type: 'GET',
+					url: "./clearData",
+					success: function(){
+						console.log("Data Cleared");
+					}
+				})
+				clearAutoCall();
+				exchange=this.value;
+				console.log(exchange);
+				$("#market").show("fast");
+				$.ajax({
+					type: 'GET',
+					url: "./getMarket",
+					data: {'exchName': exchange},
+					success: function(data){
+						$('#market').empty();
+						// console.log(data.data);
+						$.each(data.data, function(i, arr){
+							$('#market').append('<option value="'+arr.mkt_name+'">'+arr.mkt_name+'</option>');
+						})
+					}
+				})
+			})
+			$('#market').on('change', function() {
+				$.ajax({
+					type: 'GET',
+					url: "./clearData",
+					success: function(){
+						console.log("Data Cleared");
+					}
+				})
+				clearAutoCall();
+				market=this.value;
+				console.log(market);
+				$("#chartCanvas").show("fast");
+				(function() {
+					// Enable pusher logging - don't include this in production
+					Pusher.logToConsole = false;
+
+					var serverUrl = "/",
+						members = [],
+						pusher = new Pusher('e7099260734c9c20c749', {
+							cluster: 'us2',
+							encrypted: true
+						}),
+						channel, cryptoChartRef;
+
+					function showEle(elementId){
+						document.getElementById(elementId).style.display = 'flex';
+					}
+
+					function hideEle(elementId){
+						document.getElementById(elementId).style.display = 'none';
+					}
+
+					function ajax(url, method, payload, successCallback){
+						var xhr = new XMLHttpRequest();
+						xhr.open(method, url, true);
+						xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+						xhr.onreadystatechange = function () {
+							if (xhr.readyState != 4 || xhr.status != 200);
+							successCallback(xhr.responseText);
+						};
+						xhr.send(JSON.stringify(payload));
+					}
+
+					function renderCryptoChart(cryptoData) {
+						var ctx = document.getElementById("cryptoChart").getContext("2d");
+						var options = {
+							title: {
+								display: 1,
+								text: market+' Chart on '+exchange
+							},
+							responsive: true,
+							maintainAspectRatio: false
+						};
+						cryptoChartRef = new Chart(ctx, {
+							type: "line",
+							data: cryptoData,
+							options: options
+						});
+					}
+
+					var chartConfig = {
+						labels: [],
+						datasets: [{
+							label: ' '+market+' Price',
+							fill: 1,
+							lineTension: 0.1,
+							backgroundColor: "rgba(75,192,192,0.4)",
+							borderColor: "rgba(75,192,192,1)",
+							borderCapStyle: 'butt',
+							borderDash: [],
+							borderDashOffset: 0.0,
+							borderJoinStyle: 'miter',
+							pointBorderColor: "rgba(75,192,192,1)",
+							pointBackgroundColor: "#fff",
+							pointBorderWidth: 1,
+							pointHoverRadius: 5,
+							pointHoverBackgroundColor: "rgba(75,192,192,1)",
+							pointHoverBorderColor: "rgba(220,220,220,1)",
+							pointHoverBorderWidth: 2,
+							pointRadius: 1,
+							pointHitRadius: 10,
+							data: [],
+							spanGaps: false,
+						}]
+					};
+					ajax('/getCryptoPrice?exchName='+exchange+'&mrktName='+market, "GET",{}, onFetchPriceSuccess);
+					setInterval(function() {
+						ajax('/getCryptoPrice?exchName='+exchange+'&mrktName='+market, "GET", {}, () => {});
+					}, 1500);
+
+					function onFetchPriceSuccess(response){
+						hideEle("loader");
+						var respData = JSON.parse(response);
+						chartConfig.labels = respData.dataPoints.map(dataPoint => dataPoint.time);
+						chartConfig.datasets[0].data = respData.dataPoints.map(dataPoint => dataPoint.trade_price);
+						renderCryptoChart(chartConfig)
+					}
+
+					channel = pusher.subscribe('price-chart');
+					channel.bind('new-price', function(data) {
+						var newPriceData = data.dataPoint;
+						if(cryptoChartRef.data.labels.length > 20){
+							cryptoChartRef.data.labels.shift();
+							cryptoChartRef.data.datasets[0].data.shift();
+						}
+						cryptoChartRef.data.labels.push(newPriceData.time);
+						cryptoChartRef.data.datasets[0].data.push(newPriceData.trade_price);
+						cryptoChartRef.update();
+					});
+				})();
+			})
+		});
+	</script>
+</head>
+<body>
+	<div>
+		<select id="exchange"></select>
+		<select id="market" style="display: none;"></select>
+	</div>
+	<div id="chartCanvas" style="display: none;">
+		<div id="loader" class="loader">Loading</div>
+		<canvas id="cryptoChart"></canvas>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+	<script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+
+</body>
+</html>
